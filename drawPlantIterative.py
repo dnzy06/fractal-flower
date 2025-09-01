@@ -1,13 +1,3 @@
-# logic:
-# F
-# F -> F[+F][-F]
-
-# F is a new branch
-
-# We keep a stack of branch features (end point, length, width)
-# to keep track of the data from the branch that we're trying to expand
-# so we know what values to use for the next one
-
 import math
 from PIL import Image, ImageDraw
 import random
@@ -16,10 +6,10 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
 
-class Branch():
-    def __init__(self, endX, endY, length, width, depth, angle):
-        self.endX = endX
-        self.endY = endY
+class Node():
+    def __init__(self, startX, startY, length, width, depth, angle):
+        self.startX = startX
+        self.startY = startY
         self.depth = depth
 
         self.length = length
@@ -27,8 +17,8 @@ class Branch():
         self.angle = angle
 
 class Plant():
-    def __init__(self, length, width, angle):
-        self.plantCode = "F"
+    def __init__(self, length, width, angle, depth):
+        self.plantCode = "AB"
         self.lengthX = 300
         self.lengthY = 500
         self.startX = self.lengthX / 2
@@ -37,18 +27,7 @@ class Plant():
         self.angle = angle
         self.width = width
         self.frames = []
-        self.depth = 1
-
-    def expandCode(self):
-        newCode = ""
-        for i in range(len(self.plantCode)):
-            if self.plantCode[i] == "F":
-                newCode += "F[+F][-F]"
-            else:
-                newCode += self.plantCode[i]
-
-        self.plantCode = newCode
-        self.depth += 1
+        self.depth = depth
 
     def rotateEndPoint(self, startX, startY, length, angle):
         endX = startX + length * math.sin(angle)
@@ -56,90 +35,95 @@ class Plant():
         return endX, endY
     
     def drawPlant(self):
-        branchStack = []
-
-        endX = self.startX
-        endY = self.startY - self.length
-
         self.img = Image.new('RGB', (self.lengthX, self.lengthY), color='white')
         self.draw = ImageDraw.Draw(self.img)
-
+        
+        endX = self.startX
+        endY = self.startY - self.length
         self.draw.line([(self.startX, self.startY), (endX, endY)], fill='green', width=self.width)
         self.frames.append(np.array(self.draw._image.copy()))
 
-        print('og length: ', self.length)
-        mostRecentBranch = Branch(endX, endY, self.length, self.width, 1, 0)
+        nodeQueue = []
+        startingNode = Node(endX, endY, self.length, self.width, 1, 0)
+        nodeQueue.append(startingNode)
 
-        branchStack.append(mostRecentBranch)
+        while (not len(nodeQueue) == 0):
+            currNode = nodeQueue.pop(0)
+            currDepth = currNode.depth
+            currLength = currNode.length
+            width = currNode.width
 
-        for i in range(1, len(self.plantCode)):
-            if self.plantCode[i] == "[":
-                mostRecentBranch = branchStack.pop()
-                count = 0
+            if (currDepth > self.depth):
+                break
 
-            if self.plantCode[i] == "+":
-                direction = "+"
+            if width != 1:
+                width = width - 1
 
-            if self.plantCode[i] == "-":
-                direction = "-"
+            if currDepth == self.depth:
+                color = 'red'
 
-            if self.plantCode[i] == "F":
-                count += 1
-                print(direction)
-                startX = mostRecentBranch.endX
-                startY = mostRecentBranch.endY
-                length = mostRecentBranch.length * 0.5
-                if mostRecentBranch.width != 1:
-                    width =- 1
-                depth = mostRecentBranch.depth + 1
+            else:
+                color = 'green'
 
-                if direction == "+":
-                    angle = mostRecentBranch.angle + self.angle
-                    endX, endY = self.rotateEndPoint(startX, startY, length, angle)
-                    print("direction positive, print endx and endy")
-                    print(endX)
-                    print(endY)
-                    print(angle)
-                    print(startX)
-                    print(startY)
-                    print(length)
+            startX = currNode.startX
+            startY = currNode.startY
 
-                if direction == "-":
-                    angle = mostRecentBranch.angle - self.angle
-                    endX, endY = self.rotateEndPoint(startX, startY, length, angle)
+            # draw left branch
+            length = currLength * random.uniform(0.5, 0.7)
+            angle = currNode.angle + self.angle + random.uniform(-math.pi/15, math.pi/10)
+            endX, endY = self.rotateEndPoint(startX, startY, length, angle)
+            self.draw.line([(startX, startY), (endX, endY)], fill=color, width=width)
+            self.frames.append(np.array(self.draw._image.copy()))
 
-                fillColor = 'green'
-                if (depth == self.depth):
-                    fillColor = 'red'
+            # append left node
+            leftNode = Node(endX, endY, length, width, currDepth + 1, angle)
+            nodeQueue.append(leftNode)
 
-                print(startX)
-                print(startY)
-                print(endX)
-                print(endY)
-                self.draw.line([(startX, startY), (endX, endY)], fill=fillColor, width=width)
-                self.frames.append(np.array(self.draw._image.copy()))
+            # draw center branch
+            angle = currNode.angle + random.uniform(-math.pi/15, math.pi/10)
+            length = currLength * random.uniform(0.5, 0.7)
+            endX, endY = self.rotateEndPoint(startX, startY, length, angle)
+            self.draw.line([(startX, startY), (endX, endY)], fill=color, width=width)
+            self.frames.append(np.array(self.draw._image.copy()))
 
-                newBranch = Branch(endX, endY, length, width, depth + 1, angle)
-                branchStack.append(newBranch)
+            # append center node
+            centerNode = Node(endX, endY, length, width, currDepth + 1, angle)
+            nodeQueue.append(centerNode)
 
-            if self.plantCode[i] == "]":
-                if count != 2:
-                    branchStack.append(mostRecentBranch)
+            # draw right branch
+            angle = currNode.angle - self.angle + random.uniform(-math.pi/15, math.pi/10)
+            length = currLength * random.uniform(0.5, 0.7)
+            endX, endY = self.rotateEndPoint(startX, startY, length, angle)
+            self.draw.line([(startX, startY), (endX, endY)], fill=color, width=width)
+            self.frames.append(np.array(self.draw._image.copy()))
+
+            # append right node
+            rightNode = Node(endX, endY, length, width, currDepth + 1, angle)
+            nodeQueue.append(rightNode)
 
         self.img.save('visualization/plantIterative.png')
 
-plant = Plant(100, 3, math.pi/6)
-depth = 3
+    def createFramesToAnimate(self):
+        print(len(self.frames))
+        framesToAnimate = []
+        for i, frame in enumerate(self.frames):
+            if i % 100 == 0:
+                framesToAnimate.append(frame)
 
-for i in range(depth - 1):
-    plant.expandCode()
-    print(plant.plantCode)
+        return framesToAnimate
 
+plant = Plant(100, 3, math.pi/8, 10)
 plant.drawPlant()
 
+frames = plant.createFramesToAnimate()
+fig, ax = plt.subplots()
+im = ax.imshow(frames[0])
 
+def animate(frame):
+   im.set_array(frames[frame])
+   return [im]
 
-
-            
-
+ani = animation.FuncAnimation(fig, animate, frames=len(frames), 
+                           interval=2, repeat=False)
+plt.show()
         

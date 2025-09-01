@@ -64,20 +64,20 @@ class Plant():
 
         return framesToAnimate
     
-plant = Plant(16, 100, math.pi/8, 'red')
+plant = Plant(10, 100, math.pi/8, 'red')
 plant.drawPlant()
 
-# frames = plant.createFramesToAnimate()
-# fig, ax = plt.subplots()
-# im = ax.imshow(frames[0])
+frames = plant.createFramesToAnimate()
+fig, ax = plt.subplots()
+im = ax.imshow(frames[0])
 
-# def animate(frame):
-#    im.set_array(frames[frame])
-#    return [im]
+def animate(frame):
+   im.set_array(frames[frame])
+   return [im]
 
-# ani = animation.FuncAnimation(fig, animate, frames=len(frames), 
-#                            interval=2, repeat=False)
-# plt.show()
+ani = animation.FuncAnimation(fig, animate, frames=len(frames), 
+                           interval=2, repeat=False)
+plt.show()
 
 # plant = Plant(10, 100, math.pi/8, 'pink')
 # plant.drawPlant()
