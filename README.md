@@ -46,9 +46,3 @@ cmake ..
 make
 ./draw3DPlant
 ```
-
-    length=1.0f,     // Branch length  
-    depth=5,         // Recursion depth
-    angle=25.0f      // Branching angle
-);
-```
