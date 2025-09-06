@@ -65,6 +65,9 @@ class Plant():
             else:
                 color = 'green'
 
+            if len(nodeQueue) != 0 and nodeQueue[0].depth - 1 == currDepth:
+                self.frames.append(np.array(self.draw._image.copy()))
+
             startX = currNode.startX
             startY = currNode.startY
 
@@ -73,7 +76,6 @@ class Plant():
             angle = currNode.angle + self.angle + random.uniform(-math.pi/15, math.pi/10)
             endX, endY = self.rotateEndPoint(startX, startY, length, angle)
             self.draw.line([(startX, startY), (endX, endY)], fill=color, width=width)
-            self.frames.append(np.array(self.draw._image.copy()))
 
             # append left node
             leftNode = Node(endX, endY, length, width, currDepth + 1, angle)
@@ -84,7 +86,6 @@ class Plant():
             length = currLength * random.uniform(0.5, 0.7)
             endX, endY = self.rotateEndPoint(startX, startY, length, angle)
             self.draw.line([(startX, startY), (endX, endY)], fill=color, width=width)
-            self.frames.append(np.array(self.draw._image.copy()))
 
             # append center node
             centerNode = Node(endX, endY, length, width, currDepth + 1, angle)
@@ -95,7 +96,6 @@ class Plant():
             length = currLength * random.uniform(0.5, 0.7)
             endX, endY = self.rotateEndPoint(startX, startY, length, angle)
             self.draw.line([(startX, startY), (endX, endY)], fill=color, width=width)
-            self.frames.append(np.array(self.draw._image.copy()))
 
             # append right node
             rightNode = Node(endX, endY, length, width, currDepth + 1, angle)
@@ -107,12 +107,12 @@ class Plant():
         print(len(self.frames))
         framesToAnimate = []
         for i, frame in enumerate(self.frames):
-            if i % 100 == 0:
+            if i % 1 == 0:
                 framesToAnimate.append(frame)
 
         return framesToAnimate
 
-plant = Plant(100, 3, math.pi/8, 10)
+plant = Plant(100, 5, math.pi/8, 9)
 plant.drawPlant()
 
 frames = plant.createFramesToAnimate()
@@ -124,6 +124,6 @@ def animate(frame):
    return [im]
 
 ani = animation.FuncAnimation(fig, animate, frames=len(frames), 
-                           interval=2, repeat=False)
+                           interval=500, repeat=False)
 plt.show()
         

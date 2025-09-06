@@ -64,7 +64,7 @@ class Plant():
 
         return framesToAnimate
     
-plant = Plant(10, 100, math.pi/8, 'red')
+plant = Plant(11, 100, math.pi/8, 'red')
 plant.drawPlant()
 
 frames = plant.createFramesToAnimate()

@@ -1,0 +1,14 @@
+[
+{
+  "directory": "/Users/deniz/Desktop/l-systems/build",
+  "command": "/opt/homebrew/bin/aarch64-apple-darwin24-g++-15  -I/Users/deniz/Desktop/l-systems/dependencies -isystem /opt/homebrew/include -iframework /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks -g -arch arm64 -o CMakeFiles/draw3DPlant.dir/src/draw3DPlant.cpp.o -c /Users/deniz/Desktop/l-systems/src/draw3DPlant.cpp",
+  "file": "/Users/deniz/Desktop/l-systems/src/draw3DPlant.cpp",
+  "output": "CMakeFiles/draw3DPlant.dir/src/draw3DPlant.cpp.o"
+},
+{
+  "directory": "/Users/deniz/Desktop/l-systems/build",
+  "command": "/opt/homebrew/bin/aarch64-apple-darwin24-gcc-15  -I/Users/deniz/Desktop/l-systems/dependencies -isystem /opt/homebrew/include -iframework /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks -g -arch arm64 -o CMakeFiles/draw3DPlant.dir/src/glad.c.o -c /Users/deniz/Desktop/l-systems/src/glad.c",
+  "file": "/Users/deniz/Desktop/l-systems/src/glad.c",
+  "output": "CMakeFiles/draw3DPlant.dir/src/glad.c.o"
+}
+]
