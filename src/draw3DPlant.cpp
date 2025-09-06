@@ -139,7 +139,7 @@ void drawPlant(float radius, int depth, std::queue<int>& randomAngles, std::queu
 
     glTranslatef(0.0f, 0.0f, length);
     glRotatef(randomAngles.front(), 0.0f, 1.0f, 0.0f);
-    glRotatef(randomAngles.front(), 1.0f, 0.0f, 0.0f);
+    glRotatef(-18, 1.0f, 0.0f, 0.0f);
     randomAngles.pop();
     glRotatef(randomAngles.front(), 0.0f, 0.0f, 1.0f);
     randomAngles.pop();
@@ -152,7 +152,7 @@ void drawPlant(float radius, int depth, std::queue<int>& randomAngles, std::queu
 
     glTranslatef(0.0f, 0.0f, length);
     glRotatef(randomAngles.front(), 0.0f, 1.0f, 0.0f);
-    glRotatef(randomAngles.front(), 1.0f, 0.0f, 0.0f);
+    glRotatef(0, 1.0f, 0.0f, 0.0f);
     randomAngles.pop();
     glRotatef(randomAngles.front(), 0.0f, 0.0f, 1.0f);
     randomAngles.pop();
@@ -165,7 +165,7 @@ void drawPlant(float radius, int depth, std::queue<int>& randomAngles, std::queu
 
     glTranslatef(0.0f, 0.0f, length);
     glRotatef(randomAngles.front(), 0.0f, 1.0f, 0.0f);
-    glRotatef(randomAngles.front(), 1.0f, 0.0f, 0.0f);
+    glRotatef(18, 1.0f, 0.0f, 0.0f);
     randomAngles.pop();
     glRotatef(randomAngles.front(), 0.0f, 0.0f, 1.0f);
     randomAngles.pop();
